@@ -8,6 +8,8 @@ import com.giokanella.clientscrud.services.exceptions.ResourcesNotFoundException
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +19,13 @@ public class ClientService {
 
     @Autowired
     private ClientRepository repository;
+
+    //FindAll
+    @Transactional(readOnly = true)
+    public Page<ClientDTO> findAll(Pageable pageable) {
+        Page<Client> result = repository.findAll(pageable);
+        return result.map(x -> new ClientDTO(x));
+    };
 
     //FindById
     @Transactional(readOnly = true)
