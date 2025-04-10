@@ -4,6 +4,7 @@ import com.giokanella.clientscrud.dto.ClientDTO;
 import com.giokanella.clientscrud.entities.Client;
 import com.giokanella.clientscrud.repositories.ClientRepository;
 import com.giokanella.clientscrud.services.exceptions.ResourcesNotFoundException;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,6 +37,30 @@ public class ClientService {
 
         return new ClientDTO(entity);
 
+    }
+
+    @Transactional // nao eh somente leitura agora
+    public ClientDTO update(Long id, ClientDTO dto) {
+        try {
+            Client entity = repository.getReferenceById(id);
+
+
+            copyDtoToEntity(dto, entity);
+
+            entity = repository.save(entity);
+
+            return new ClientDTO(entity);
+        } catch (EntityNotFoundException e) {
+            throw new ResourcesNotFoundException("Recurso não encontrado");
+        }
+    }
+
+    private void copyDtoToEntity(ClientDTO dto, Client entity) {
+        entity.setName(dto.getName());
+        entity.setCpf(dto.getCpf());
+        entity.setIncome(dto.getIncome());
+        entity.setBirthDate(dto.getBirthDate());
+        entity.setChildren(dto.getChildren());
     }
 
 }
