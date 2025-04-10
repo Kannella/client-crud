@@ -2,6 +2,7 @@ package com.giokanella.clientscrud.dto;
 
 import com.giokanella.clientscrud.entities.Client;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.PastOrPresent;
 
 import java.time.LocalDate;
 
@@ -10,11 +11,10 @@ public class ClientDTO {
 
     @NotBlank(message = "Campo requerido")
     private String name;
-
-    @NotBlank(message = "Campo requerido")
     private String cpf;
 
     private Double income;
+    @PastOrPresent(message = "Data de nascimento não pode ser data futura")
     private LocalDate birthDate;
     private Integer children;
 
